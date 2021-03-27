@@ -9,34 +9,39 @@ const App = () => {
     'Premature optimization is the root of all evil.',
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
   ]
-  const initialVotes = {
-    0: 0,   
-    1: 0, 
-    2: 0, 
-    3: 0, 
-    4: 0,   
-    5: 0, 
-  }
    
   const [selected, setSelected] = useState(0)
-  const [votes, setVotes] = useState(initialVotes)
+  const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0))
 
   const randomHandler = () => {
     setSelected(Math.floor(Math.random() * anecdotes.length))
   }
 
   const voteHandler = () => {
-    setVotes({
-              ...votes, 
-              [selected]: votes[selected]+1
-            })
+    const newVotes = [...votes];
+    newVotes[selected] += 1
+    setVotes(newVotes)
+  }
+
+  const indexOfMax = (arr) => {
+    return arr.reduce(([maxValue,maxIndex],currentValue,currentIndex) => {
+      if (currentValue > maxValue) return [currentValue,currentIndex]
+      else return [maxValue,maxIndex]
+    },[0,0])[1]
   }
   return (
     <div>
-      <p>{anecdotes[selected]}</p>
-      <p>{votes[selected]} Votes</p>
-      <button onClick={randomHandler}>Next Annecdote</button>
-      <button onClick={voteHandler}>Vote</button>
+      <div>
+        <h2>Anecdote of the day</h2>
+        <p>{anecdotes[selected]}</p>
+        <p>{votes[selected]} Votes</p>
+        <button onClick={randomHandler}>Next Annecdote</button>
+        <button onClick={voteHandler}>Vote</button>
+      </div>
+      <div>
+        <h2>Most voted Anecdote</h2>
+        <p>{anecdotes[indexOfMax(votes)]}</p>
+      </div>
     </div>
   )
 }
